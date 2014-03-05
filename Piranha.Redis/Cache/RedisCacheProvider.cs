@@ -60,10 +60,10 @@ namespace Piranha.Cache
                     if (redisClient.HashContainsEntry(PiranhaHash, key))
                     {
                         string resultJson = redisClient.GetValueFromHash(PiranhaHash, key);
-                        string objType = redisClient.GetValueFromHash(PiranhaHash, String.Format("{0}:Type", key));
+                        string objType = redisClient.GetValueFromHash(PiranhaHash, String.Format("{0}:type", key));
 
                         Type t = objType.To<Type>();
-                        object result = resultJson.To(t);
+                        object result = JsonSerializer.DeserializeFromString(resultJson, t);
 
                         return result;
                     }
@@ -75,7 +75,7 @@ namespace Piranha.Cache
                 using (var redisClient = redisClientsManager.GetClient())
                 {
                     redisClient.SetEntryInHash(PiranhaHash, key, value.ToJson());
-                    redisClient.SetEntryInHash(PiranhaHash, String.Format("{0}:Type", key), value.GetType().ToJson());
+                    redisClient.SetEntryInHash(PiranhaHash, String.Format("{0}:type", key), value.GetType().ToJson());
                 }
             }
         }

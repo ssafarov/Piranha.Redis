@@ -59,11 +59,6 @@ namespace Piranha.Redis.UnitTests.Cache
             }
         }
 
-        public class TestObject
-        {
-            public int Index { get; set; }
-        }
-
         public class the_indexer_set_operator_should : RedisCacheProviderFacts
         {
             public the_indexer_set_operator_should()
@@ -80,7 +75,7 @@ namespace Piranha.Redis.UnitTests.Cache
             [Fact]
             public void set_the_type()
             {
-                client.Received().SetEntryInHash("piranha:cache", "abcdef:Type", "\"Piranha.Redis.UnitTests.Cache.RedisCacheProviderFacts+TestObject, Piranha.Redis.UnitTests\"");
+                client.Received().SetEntryInHash("piranha:cache", "abcdef:type", "\"Piranha.Redis.UnitTests.Cache.TestObject, Piranha.Redis.UnitTests\"");
             }
         }
 
@@ -100,7 +95,7 @@ namespace Piranha.Redis.UnitTests.Cache
             public void return_object_from_cache()
             {
                 client.HashContainsEntry("piranha:cache", "abcdef").Returns(true);
-                client.GetValueFromHash("piranha:cache", "abcdef:Type").Returns("\"Piranha.Redis.UnitTests.Cache.RedisCacheProviderFacts+TestObject, Piranha.Redis.UnitTests\"");
+                client.GetValueFromHash("piranha:cache", "abcdef:type").Returns("\"Piranha.Redis.UnitTests.Cache.TestObject, Piranha.Redis.UnitTests\"");
                 client.GetValueFromHash("piranha:cache", "abcdef").Returns("{\"Index\":1}");
                 
                 object result = sut["abcdef"];
@@ -108,5 +103,10 @@ namespace Piranha.Redis.UnitTests.Cache
                 result.As<TestObject>().Index.Should().Be(1);
             }
         }
+    }
+
+    public class TestObject
+    {
+        public int Index { get; set; }
     }
 }
